@@ -135,7 +135,7 @@ body, body * {
 }
 
 /* Screen is big enough to show the menu and the app */
-@media screen and (min-width: 34em) {
+@media screen and (min-width: 640px) {
     #menu {
         z-index: 800;
         position: absolute;
@@ -160,7 +160,7 @@ body, body * {
 }
 
 /* Screen is big enough to show both, but not big enough to add padding to the app */
-@media screen and (max-width: 56em) {
+@media screen and (max-width: 900px) {
     #container {
         border-left: 0;
         border-right: 0;
@@ -169,7 +169,7 @@ body, body * {
 }
 
 /* Screen is too small to fit an overlay */
-@media screen and (max-width: 20em) {
+@media screen and (max-width: 320px) {
     #menu {
         top: 2.5em;
         min-width: 100%;
