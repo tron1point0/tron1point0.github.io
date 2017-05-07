@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Genpass</title>
+    <link rel="stylesheet" type="text/css" href="style/main.css" />
+    <script type="text/javascript" data-main="script/main" src="lib/dist/require-js/require.js"></script>
+</head>
+<header id="header">
+    <button id="menuButton">m</button>
+    <h1>Genpass</h1>
+</header>
+<menu id="menu">
+    <label for="length" title="Length of the generated password.">Length</label>
+    <input type="number"
+           id="length"
+           required
+           value="16"
+           title="Length of the generated password."
+           tabindex="4"
+           spellcheck="false"
+           min="8"
+           step="1"
+    />
+    <!-- TODO: Generate JS shortcuts from accesskey -->
+    <label for="uppercase" title="Allow uppercase letters: [A-Z]">Uppercase</label>
+    <input type="checkbox"
+           accesskey="u"
+           class="allowedCharacters"
+           id="uppercase"
+           value="AZ"
+           checked />
+    <label for="lowercase" title="Allow lowercase letters: [a-z]">Lowercase</label>
+    <input type="checkbox"
+           accesskey="l"
+           class="allowedCharacters"
+           id="lowercase"
+           value="az"
+           checked />
+    <label for="numbers" title="Allow numbers: [0-9]">Numbers</label>
+    <input type="checkbox"
+           accesskey="n"
+           class="allowedCharacters"
+           id="numbers"
+           value="09"
+           checked />
+    <label for="space" title="Allow whitespace: [ ]">Space</label>
+    <input type="checkbox"
+           accesskey=" "
+           class="allowedCharacters"
+           id="space"
+           value=" " />
+    <label for="symbols" title="Allow symbols: [!-/][:-@][[-`][{-~]">Symbols</label>
+    <!-- For `value`, every 2 characters are passed to a Range connstructor -->
+    <input type="checkbox"
+           accesskey="s"
+           class="allowedCharacters"
+           id="symbols"
+           value="!/:@[`{~" />
+</menu>
+<div id="overlay"></div>
+<div id="container">
+    <input type="text"
+           id="salt"
+           autofocus
+           required
+           placeholder="Salt"
+           title="Public part of a keypair. You can share this with others."
+           tabindex="1"
+           list="saved-salts"
+           spellcheck="false"
+    />
+    <!-- TODO: Show the 3-color hash on big screens. -->
+    <input type="password"
+           id="secret"
+           required
+           placeholder="Secret"
+           title="Private part of a keypair. Keep this value to yourself."
+           tabindex="2"
+           spellcheck="false"
+    />
+    <div id="result" tabindex="3"><span class="placeholder">Password</span></div>
+</div>
+
+<datalist id="saved-salts">
+    <!-- TODO: Populate in JS from localstorage or cookies. -->
+</datalist>
+</body>
+</html>
