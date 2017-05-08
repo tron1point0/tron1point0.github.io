@@ -48,9 +48,6 @@ require([
             })(),
         });
 
-    // TODO: XXX REMOVE
-    window.GENERATOR = generator;
-
     /**
      * Handles clicking on the menu button.
      *
