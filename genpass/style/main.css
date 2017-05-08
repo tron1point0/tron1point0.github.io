@@ -188,8 +188,7 @@ body, body * {
 
 input[type=text],
 input[type=password],
-input[type=number],
-#result {
+input[type=number] {
     border: 0;
     border-bottom: 0.1em solid ButtonShadow;
     background-color: transparent;
@@ -203,19 +202,13 @@ input[type=number],
     transition: border-bottom-color 200ms;
 }
 
-#result {
+#result:not(:placeholder-shown) {
     font-family: Password;
-}
-
-#result > .placeholder {
-    /* TODO: Fix for all browsers. */
-    color: rgb(169,169,169);
 }
 
 input[type=text]:focus,
 input[type=password]:focus,
-input[type=number]:focus,
-#result:focus {
+input[type=number]:focus {
     outline: none;
 
     border-bottom-color: ActiveBorder;

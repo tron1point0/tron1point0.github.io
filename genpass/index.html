@@ -84,7 +84,13 @@
            autocorrect="off"
            autocapitalize="none"
     />
-    <div id="result" tabindex="3"><span class="placeholder">Password</span></div>
+    <input type="text"
+           id="result"
+           placeholder="Password"
+           readonly
+           title="Generated password. Requires both the Salt and the Secret"
+           tabindex="3"
+    />
 </div>
 
 <datalist id="saved-salts">

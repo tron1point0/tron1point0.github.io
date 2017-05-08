@@ -10,15 +10,13 @@ require.config({
 require([
     "lib/genpass",
     "utils/Range",
-    "utils/Selection",
     "utils/Keycodes",
     "jquery",
     "utils/Array",
-], function(Genpass, Range, Selection, Keycodes, $) {
+], function(Genpass, Range, Keycodes, $) {
     var $salt = $("#salt"),
         $secret = $("#secret"),
         $result = $("#result"),
-        $placeholder = $("#result > *"),
         $length = $("#length"),
         $chars = $(".allowedCharacters"),
         $showPassword = $("#showPassword"),
@@ -144,8 +142,7 @@ require([
                 case Keycodes.ESCAPE:
                     $salt.val("");
                     $secret.val("");
-                    $result.empty();
-                    $result.append($placeholder);
+                    $result.val("");
                     $salt.focus();
                     break;
 
@@ -180,9 +177,12 @@ require([
      */
     function generate() {
         if ($salt.val() && $secret.val()) {
-            $placeholder.detach();
-            $result.text(generator.generate($salt.val(), $secret.val()));
-            Selection.selectContents($result.get(0));
+            $result.val(generator.generate($salt.val(), $secret.val()));
+
+            // Need the setTimeout because some browsers reset the selection *after* the handler fires.
+            setTimeout(function() {
+                $result.select();
+            }, 1);
         }
 
         // TODO: Copy to clipboard
