@@ -11,6 +11,32 @@
     <button id="menuButton">m</button>
     <h1>Genpass</h1>
 </header>
+<div id="container">
+    <input type="text"
+           id="salt"
+           autofocus
+           required
+           placeholder="Salt"
+           title="Public part of a keypair. You can share this with others."
+           list="saved-salts"
+           spellcheck="false"
+           autocorrect="off"
+           autocapitalize="none"
+    />
+    <!-- TODO: Show the 3-color hash on big screens. -->
+    <input type="password"
+           id="secret"
+           required
+           placeholder="Secret"
+           title="Private part of a keypair. Keep this value to yourself."
+    />
+    <input type="text"
+           id="result"
+           placeholder="Password"
+           readonly
+           title="Generated password. Requires both the Salt and the Secret"
+    />
+</div>
 <menu id="menu">
     <label for="length" title="Length of the generated password.">Length</label>
     <input type="number"
@@ -18,7 +44,6 @@
            required
            value="16"
            title="Length of the generated password."
-           tabindex="4"
            spellcheck="false"
            min="8"
            step="1"
@@ -60,38 +85,6 @@
            value="!/:@[`{~" />
 </menu>
 <div id="overlay"></div>
-<div id="container">
-    <input type="text"
-           id="salt"
-           autofocus
-           required
-           placeholder="Salt"
-           title="Public part of a keypair. You can share this with others."
-           tabindex="1"
-           list="saved-salts"
-           spellcheck="false"
-           autocorrect="off"
-           autocapitalize="none"
-    />
-    <!-- TODO: Show the 3-color hash on big screens. -->
-    <input type="password"
-           id="secret"
-           required
-           placeholder="Secret"
-           title="Private part of a keypair. Keep this value to yourself."
-           tabindex="2"
-           spellcheck="false"
-           autocorrect="off"
-           autocapitalize="none"
-    />
-    <input type="text"
-           id="result"
-           placeholder="Password"
-           readonly
-           title="Generated password. Requires both the Salt and the Secret"
-           tabindex="3"
-    />
-</div>
 
 <datalist id="saved-salts">
     <!-- TODO: Populate in JS from localstorage or cookies. -->
