@@ -21,7 +21,7 @@ body, body * {
 #header {
     background-color: slategray;
     color: white;
-    text-shadow: 0 0 0.2em black;
+    text-shadow: 0 0 0.2em ThreeDShadow;
     position: fixed;
     top: 0;
     right: 0;
