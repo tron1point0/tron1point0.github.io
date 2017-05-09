@@ -28,7 +28,7 @@ body, body * {
     left: 0;
     box-shadow: 0 -0.2em 0.5em ThreeDShadow;
     width: 100%;
-    z-index: 900;
+    z-index: 20;
 }
 
 #menuButton {
@@ -72,7 +72,7 @@ body, body * {
 }
 
 #container {
-    z-index: 1000;
+    z-index: 0;
     max-width: 24em;
     margin: 2.5em auto 0 auto;
     border-radius: 0.5em;
@@ -83,7 +83,7 @@ body, body * {
 }
 
 #menu {
-    z-index: 1200;
+    z-index: 40;
     min-width: 10em;
     max-width: 80%;
     max-width: calc(100% - 2em);
@@ -122,7 +122,7 @@ body, body * {
     left: 0;
     background-color: ThreeDDarkShadow;
     opacity: 0;
-    z-index: 900;
+    z-index: 30;
 
     transition: display 200ms, opacity 200ms;
 }
@@ -137,7 +137,7 @@ body, body * {
 /* Screen is big enough to show the menu and the app */
 @media screen and (min-width: 640px) {
     #menu {
-        z-index: 800;
+        z-index: 10;
         position: absolute;
         top: 0;
         left: 0;
@@ -174,7 +174,7 @@ body, body * {
         top: 2.5em;
         min-width: 100%;
         max-width: 100%;
-        z-index: 800;
+        z-index: 10;
     }
 
     #overlay {
