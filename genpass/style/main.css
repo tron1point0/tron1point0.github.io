@@ -318,3 +318,59 @@ input[type=checkbox]:checked:after {
 #result.show-password:focus {
     font-family: monospace;
 }
+
+/******************
+ * Flash Messages *
+ ******************/
+
+@keyframes fadeZoomSlideInOut {
+    0% {
+        transform: translateY(-100%) scale(1.5,1.5);
+        opacity: 0;
+    }
+    10% {
+        transform: none;
+        opacity: 1;
+    }
+    90% {
+        transform: none;
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100%) scale(1.5,1.5);
+        opacity: 0;
+    }
+}
+
+#container {
+    position: relative;
+}
+
+#flash-messages {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+}
+
+#flash-messages > * {
+    border-radius: 0.5em;
+    box-shadow: 0 0.1em 0.5em rgba(0,0,0,0.5);
+    margin: 1em auto;
+    padding: 0.5em;
+
+    animation: fadeZoomSlideInOut 2s ease-in-out 0 1;
+}
+
+#flash-messages > *.info {
+    background-color: InfoBackground;
+}
+
+#flash-messages > *.warning {
+    background-color: orange; /* TODO */
+}
+
+#flash-messages > *.error {
+    background-color: red; /* TODO */
+}

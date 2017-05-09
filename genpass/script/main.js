@@ -11,15 +11,17 @@ require([
     "lib/genpass",
     "utils/Range",
     "utils/Keycodes",
+    "utils/FlashNotification",
     "jquery",
     "utils/Array",
-], function(Genpass, Range, Keycodes, $) {
+], function(Genpass, Range, Keycodes, Flash, $) {
     var $salt = $("#salt"),
         $secret = $("#secret"),
         $result = $("#result"),
         $length = $("#length"),
         $chars = $(".allowedCharacters"),
         $showPassword = $("#showPassword"),
+        flasher = new Flash({ container: $("#flash-messages") }),
         generator = new Genpass({
             length: $("#length").val(),
             allowedCharacters: (function() {
@@ -179,6 +181,9 @@ require([
             // Need the setTimeout because some browsers reset the selection *after* the handler fires.
             setTimeout(function() {
                 $result.select();
+                if (document.execCommand && document.execCommand("copy")) {
+                    flasher.info("Copied to clipboard");
+                }
             }, 1);
         }
 
