@@ -186,17 +186,19 @@ require([
      * Populates `#result` and selects the value.
      */
     function generate() {
-        if ($salt.val() && $secret.val()) {
-            $result.val(generator.generate($salt.val(), $secret.val()));
-
-            // Need the setTimeout because some browsers reset the selection *after* the handler fires.
-            setTimeout(function() {
-                $result.select();
-                if (document.execCommand && document.execCommand("copy")) {
-                    flasher.info("Copied to clipboard");
-                }
-            }, 1);
+        if (!$salt.val() || !$secret.val()) {
+            return;
         }
+
+        $result.val(generator.generate($salt.val(), $secret.val()));
+
+        // Need the setTimeout because some browsers reset the selection *after* the handler fires.
+        setTimeout(function () {
+            $result.select();
+            if (document.execCommand && document.execCommand("copy")) {
+                flasher.info("Copied to clipboard");
+            }
+        }, 1);
 
         // TODO: Copy to clipboard
     }
