@@ -199,7 +199,5 @@ require([
                 flasher.info("Copied to clipboard");
             }
         }, 1);
-
-        // TODO: Copy to clipboard
     }
 });
