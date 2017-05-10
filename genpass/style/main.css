@@ -360,7 +360,7 @@ input[type=checkbox]:checked:after {
     margin: 1em auto;
     padding: 0.5em;
 
-    animation: fadeZoomSlideInOut 2s ease-in-out 0 1;
+    animation: fadeZoomSlideInOut 2s ease-in-out none 1;
 }
 
 #flash-messages > *.info {
