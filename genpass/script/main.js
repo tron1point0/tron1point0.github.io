@@ -102,6 +102,23 @@ require([
     });
 
     /**
+     * Workaround for android chrome bug - default keyboard can't tab to next field.
+     *
+     * So instead, we make <Enter>, <Return>, and <KP_Return> focus the next empty field or regenerate the password.
+     */
+    $salt.on("keypress.submit", function (event) {
+        switch (event.which) {
+            case Keycodes.ENTER:
+                if ($secret.val()) {
+                    $result.focus();
+                } else {
+                    $secret.focus();
+                }
+                break;
+        }
+    });
+
+    /**
      * Makes <Return>, <Enter>, and <KP_Return> generate the password as well as <Tab>
      */
     $secret.on("keypress.generate", function (event) {
