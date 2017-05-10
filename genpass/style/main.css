@@ -351,13 +351,16 @@ input[type=checkbox]:checked:after {
     top: 0;
     left: 0;
     right: 0;
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
     z-index: 50;
 }
 
 #flash-messages > * {
     border-radius: 0.5em;
     box-shadow: 0 0.1em 0.5em rgba(0,0,0,0.5);
-    margin: 1em auto;
+    margin: 1em 0 0 0;
     padding: 0.5em;
 
     animation: fadeZoomSlideInOut 2s ease-in-out none 1;
