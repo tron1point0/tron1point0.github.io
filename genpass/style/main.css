@@ -1,3 +1,31 @@
+:root {
+    --shadow: rgba(0,0,0,0.5);
+    --overlay: rgba(0,0,0,0.8);
+
+    /* http://paletton.com/#uid=73O1C0kpDPq5GSwhHNBDnTPYVGk */
+
+    --active: royalblue;
+    --active-border: #144AEC; /* royalblue + 1 */
+
+    --header: #0133C9; /* royalblue + 2 */
+    --header-text: white;
+
+    --disabled: hsl(0,0%,70%);
+    --disabled-border: hsl(0,0%,60%);
+
+    --window: white;
+    --window-border: hsl(0,0%,90%);
+
+    --menu: hsl(0,0%,98%);
+
+    --page: whitesmoke;
+
+    /* Lightest of their color */
+    --info-message: #DFF7CB;
+    --warning-message: #FFF1D2;
+    --error-message: #F8CCD9;
+}
+
 @font-face {
     font-family: Password;
     src: url(Password.woff);
@@ -8,27 +36,52 @@
     src: url(Symbols.woff);
 }
 
-body {
-    background-color: Window;
+html {
+    background-color: var(--page);
     margin: 0;
     padding: 0;
 }
 
-body, body * {
+html, html * {
     font: 20pt sans-serif;
 }
 
+body {
+    z-index: 0;
+    max-width: 24em;
+    margin: 2.5em auto 0 auto;
+    border-radius: 0.5em;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    background-color: var(--window);
+    box-sizing: border-box;
+}
+
+body, #menu {
+    padding: 1em 1em 2em 1em;
+    border: 1px solid var(--window-border);
+    border-top: 0;
+}
+
+#header, #header * {
+    color: var(--header-text);
+    text-shadow: 0 0 0.2em var(--shadow);
+}
+
 #header {
-    background-color: slategray;
-    color: white;
-    text-shadow: 0 0 0.2em ThreeDShadow;
+    background-color: var(--header);
     position: fixed;
     top: 0;
     right: 0;
     left: 0;
-    box-shadow: 0 -0.2em 0.5em ThreeDShadow;
+    box-shadow: 0 0 0.5em var(--shadow);
     width: 100%;
     z-index: 20;
+}
+
+#header > h1 {
+    text-align: center;
+    font-weight: bold;
 }
 
 #menuButton {
@@ -40,46 +93,23 @@ body, body * {
     box-sizing: border-box;
     background: transparent;
     border: 0;
-    color: white;
-    text-shadow: 0 0 0.5em ThreeDShadow;
+    text-shadow: 0 0 0.5em var(--shadow);
     font-family: Symbols;
 
     transition: text-shadow 200ms, left 200ms, top 200ms;
 }
 
 #menuButton:hover {
-    text-shadow: 0 0 0.5em ThreeDHighlight;
+    text-shadow: 0 0 0.5em var(--header-text);
     transition: text-shadow 200ms, left 200ms, top 200ms;
 }
 
 #menuButton:active {
     top: 0.1em;
     left: 0.1em;
-    text-shadow: -0.1em -0.1em 0.5em ThreeDShadow;
+    text-shadow: -0.1em -0.1em 0.5em var(--shadow);
 
     transition: text-shadow 200ms, left 200ms, top 200ms;
-}
-
-#header > h1 {
-    text-align: center;
-    font-weight: bold;
-}
-
-#container, #menu {
-    padding: 1em 1em 2em 1em;
-    border: 1px solid WindowFrame;
-    border-top: 0;
-}
-
-#container {
-    z-index: 0;
-    max-width: 24em;
-    margin: 2.5em auto 0 auto;
-    border-radius: 0.5em;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    background-color: ThreeDHighlight;
-    box-sizing: border-box;
 }
 
 #menu {
@@ -95,42 +125,42 @@ body, body * {
     border-top: 0;
     border-left: 0;
     border-bottom: 0;
-    box-shadow: -0.2em 0 0.5em ThreeDShadow;
-    background-color: Menu;
+    box-shadow: -0.2em 0 0.5em var(--shadow);
+    background-color: var(--menu);
     overflow: scroll;
     box-sizing: border-box;
-
-    transition: left 200ms;
-}
-
-#menu *:first-child {
-    margin-top: 0;
 }
 
 #menu.open {
     left: 0;
+}
 
+#menu, #menu.open {
     transition: left 200ms;
+}
+
+#menu > *:first-child {
+    margin-top: 0;
 }
 
 #overlay {
     visibility: hidden;
-    position: absolute;
+    position: fixed;
+    background-color: var(--shadow);
+    opacity: 0;
+}
+
+#menu.open + #overlay {
+    visibility: visible;
     top: 0;
     right: 0;
     bottom: 0;
     left: 0;
-    background-color: ThreeDDarkShadow;
-    opacity: 0;
+    opacity: 1;
     z-index: 30;
-
-    transition: display 200ms, opacity 200ms;
 }
 
-#menu.open ~ #overlay {
-    visibility: visible;
-    opacity: 0.5;
-
+#overlay, #menu.open + #overlay {
     transition: opacity 200ms;
 }
 
@@ -146,22 +176,22 @@ body, body * {
         padding-top: 3.5em;
     }
 
+    #menu.open + #overlay {
+        display: none;
+    }
+
     #menuButton {
         display: none;
     }
 
-    #overlay {
-        display: none;
-    }
-
-    body {
+    html {
         margin-left: 10em;
     }
 }
 
 /* Screen is big enough to show both, but not big enough to add padding to the app */
 @media screen and (max-width: 900px) {
-    #container {
+    body {
         border-left: 0;
         border-right: 0;
         border-radius: 0;
@@ -177,7 +207,7 @@ body, body * {
         z-index: 10;
     }
 
-    #overlay {
+    #menu.open + #overlay {
         display: none;
     }
 }
@@ -190,7 +220,7 @@ input[type=text],
 input[type=password],
 input[type=number] {
     border: 0;
-    border-bottom: 0.1em solid ButtonShadow;
+    border-bottom: 0.1em solid var(--shadow);
     background-color: transparent;
     box-sizing: border-box;
     width: 100%;
@@ -198,8 +228,6 @@ input[type=number] {
     padding: 0.2em 0.1em;
     margin: 0.5em 0;
     font: 20pt sans-serif;
-
-    transition: border-bottom-color 200ms;
 }
 
 #result:not(:placeholder-shown) {
@@ -209,9 +237,16 @@ input[type=number] {
 input[type=text]:focus,
 input[type=password]:focus,
 input[type=number]:focus {
-    outline: none;
+    outline: none;      /* Overrides webkit outline. */
+    border-bottom-color: var(--active);
+}
 
-    border-bottom-color: ActiveBorder;
+input[type=text],
+input[type=password],
+input[type=number],
+input[type=text]:focus,
+input[type=password]:focus,
+input[type=number]:focus {
     transition: border-bottom-color easeInOutElastic 200ms;
 }
 
@@ -256,8 +291,8 @@ input[type=checkbox]:before {
     top: 0.5em;
     height: 0.5em;
     width: 1.5em;
-    border: 1px solid ButtonShadow;
-    background-color: ButtonFace;
+    border: 1px solid var(--disabled-border);
+    background-color: var(--disabled);
     border-radius: 0.5em;
 
     transition: background-color 200ms, border-color 200ms;
@@ -270,16 +305,17 @@ input[type=checkbox]:after {
     top: 0.25em;
     height: 1em;
     width: 1em;
-    border: 1px solid ButtonShadow;
-    background-color: ThreeDHighlight;
+    border: 1px solid var(--window-border);
+    background-color: var(--window);
+    box-shadow: 0 0.05em 0.1em var(--shadow);
     border-radius: 50%;
 
     transition: left 200ms;
 }
 
 input[type=checkbox]:checked:before {
-    background-color: Highlight;
-    border-color: ActiveBorder;
+    background-color: var(--active);
+    border-color: var(--active-border);
 
     transition: all 200ms;
 }
@@ -325,7 +361,7 @@ input[type=checkbox]:checked:after {
 
 @keyframes fadeZoomSlideInOut {
     0% {
-        transform: translateY(-100%) scale(1.5,1.5);
+        transform: scale(1.5,1.5) translateY(-100%);
         opacity: 0;
     }
     10% {
@@ -342,24 +378,20 @@ input[type=checkbox]:checked:after {
     }
 }
 
-#container {
-    position: relative;
-}
-
 #flash-messages {
     position: absolute;
-    top: 0;
+    top: 2.5em;
     left: 0;
     right: 0;
     display: flex;
     flex-flow: column wrap;
     align-items: center;
-    z-index: 50;
+    z-index: 10;
 }
 
 #flash-messages > * {
     border-radius: 0.5em;
-    box-shadow: 0 0.1em 0.5em rgba(0,0,0,0.5);
+    box-shadow: 0 0.1em 0.5em var(--shadow);
     margin: 1em 0 0 0;
     padding: 0.5em;
 
@@ -367,13 +399,13 @@ input[type=checkbox]:checked:after {
 }
 
 #flash-messages > *.info {
-    background-color: InfoBackground;
+    background-color: var(--info-message);
 }
 
 #flash-messages > *.warning {
-    background-color: orange; /* TODO */
+    background-color: var(--warning-message);
 }
 
 #flash-messages > *.error {
-    background-color: red; /* TODO */
+    background-color: var(--error-message);
 }
