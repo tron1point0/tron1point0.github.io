@@ -53,6 +53,13 @@ describe("Range", function() {
         }));
     });
 
+    it("can be created with a single-character class", function() {
+        expect(new Range("[A]")).toEqual(jasmine.objectContaining({
+            from: 65,
+            to: 66,
+        }));
+    });
+
     it("can be created with two integers", function() {
         expect(new Range(65, 91)).toEqual(jasmine.objectContaining({
             from: 65,
@@ -65,6 +72,14 @@ describe("Range", function() {
             from: 65,
             to: 91,
         }));
+    });
+
+    it("can generate multiple ranges", function() {
+        expect(Range.ranges("[a-zA-Z0-9]")).toEqual([
+            new Range(97, 123),
+            new Range(65, 91),
+            new Range(48, 58),
+        ]);
     });
 
     it("can generate its list of characters", function() {

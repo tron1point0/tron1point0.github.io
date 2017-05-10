@@ -13,6 +13,34 @@ define(function() {
         return this;
     };
 
+    /**
+     * Constructs multiple {@link Range} objects from a string specifier.
+     *
+     * This only accepts the character class format.
+     *
+     * Example:
+     *
+     * > Range.ranges("[a-zA-Z]")
+     * [Range, Range]
+     *
+     * @param {String} [str]
+     * @returns [Range]
+     */
+    Range.ranges = function(str) {
+        if (!str) {
+            return [];
+        }
+
+        var stop = str.length - 2,
+            _ret = new Array(((stop / 3) | 0) || 1);
+
+        for (var i = 1, j = 0; i < stop; i += 3, j++) {
+            _ret[j] = new Range(str.charCodeAt(i), str.charCodeAt(i + 2) + 1);
+        }
+
+        return _ret;
+    }
+
     Range.prototype.toCharArray = function() {
         var _ret = new Array(+this);
         for (var i = this.from, j = 0; i < this.to; i++, j++) {
@@ -84,6 +112,11 @@ define(function() {
             case 2:         // "az"
                 return {
                     from: from.charCodeAt(0),
+                    to: from.charCodeAt(1) + 1,
+                }
+            case 3:         // "[a]"
+                return {
+                    from: from.charCodeAt(1),
                     to: from.charCodeAt(1) + 1,
                 }
             case 4:         // "a..z"

@@ -28,25 +28,19 @@ require([
                 var codes = [];
 
                 $chars.each(function(i,e) {
-                    // Pre-generate the Range objects to use in the event handler
-                    $(e).data("ranges", (function() {
-                        var value = $(e).val(),
-                            // In case there's only one character, the `| 1` forces integer math
-                            length = (value.length / 2) | 1,
-                            _ret = new Array(length);
+                    var ranges = Range.ranges($(e).val());
+                    $(e).data("ranges", ranges);
 
-                        for (var i = 0, j = 0; i < value.length; i += 2, j++) {
-                            _ret[j] = new Range(value.substring(i, i + 2));
-                            if (e.checked) {
-                                codes = codes.extend(_ret[j].toCodeArray());
-                            }
-                        }
-
-                        return _ret;
-                    })());
+                    if (e.checked) {
+                        codes = codes.merge(ranges.map(function(r) {
+                            return r.toCodeArray();
+                        }).reduce(function(a,b) {
+                            return a.merge(b);
+                        }));
+                    }
                 });
 
-                return codes.mergeSort();
+                return codes;
             })(),
         });
 
