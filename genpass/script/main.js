@@ -156,7 +156,6 @@ require([
                     $salt.focus();
                     break;
 
-                // TODO: Add button and enable (see main.css as well)
                 case Keycodes.V:
                     $showPassword.click();
                     break;
