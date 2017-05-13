@@ -1,14 +1,15 @@
 require.config({
     paths: {
-        "crypto-js": "../lib/dist/crypto-js",
-        "utils": "../lib/utils",
-        "lib": "../lib",
-        "jquery": "../lib/dist/jquery/jquery-2.1.0.min"
+        "crypto-js": "../../lib/dist/crypto-js",
+        "utils": "../../lib/utils",
+        "lib": "../../lib",
+        "jquery": "../../lib/dist/jquery/jquery-2.1.0.min",
+        "script": "./",
     },
 });
 
 require([
-    "lib/genpass",
+    "script/genpass",
     "utils/Range",
     "utils/Keycodes",
     "utils/FlashNotification",

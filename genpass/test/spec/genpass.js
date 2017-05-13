@@ -2,7 +2,7 @@ describe("Genpass", function () {
     var instance, Genpass;
 
     beforeAll(function(done) {
-        require(["lib/genpass"], function(module) {
+        require(["script/genpass"], function(module) {
             Genpass = module;
             done();
         });
