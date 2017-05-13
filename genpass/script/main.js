@@ -179,6 +179,9 @@ require([
             }
         });
 
+    /**
+     * Shows the generated password in a human-readable font.
+     */
     $showPassword.on("click.show", function(event) {
         $result.toggleClass("show");
     });
