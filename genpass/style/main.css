@@ -84,31 +84,47 @@ body, #menu {
     font-weight: bold;
 }
 
-#menuButton {
-    position: absolute;
+button {
+    position: relative;
+    background: transparent;
+    border: 0;
     top: 0;
     left: 0;
+}
+
+button:focus {
+    outline: none;
+}
+
+button:active {
+    top: 0.1em;
+    left: 0.1em;
+}
+
+button, button:active {
+    transition: left 200ms, top 200ms;
+}
+
+#menuButton {
+    position: absolute;
     width: 2.5em;
     height: 2.5em;
     box-sizing: border-box;
-    background: transparent;
-    border: 0;
     text-shadow: 0 0 0.5em var(--shadow);
     font-family: Symbols;
-
-    transition: text-shadow 200ms, left 200ms, top 200ms;
 }
 
 #menuButton:hover {
     text-shadow: 0 0 0.5em var(--header-text);
-    transition: text-shadow 200ms, left 200ms, top 200ms;
 }
 
 #menuButton:active {
     top: 0.1em;
     left: 0.1em;
     text-shadow: -0.1em -0.1em 0.5em var(--shadow);
+}
 
+#menuButton, #menuButton:hover, #menuButton:active {
     transition: text-shadow 200ms, left 200ms, top 200ms;
 }
 
