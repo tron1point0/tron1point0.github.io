@@ -346,28 +346,32 @@ input[type=checkbox]:checked:after {
  * Show Password Button *
  ************************/
 
-/* TODO */
-/*
-#result {
-    position: relative;
+input + .bind-previous {
+    float: right;
+    border: 0;
+    padding: 0.2em;
+    margin: -2em 0 0 0;
+    background: transparent;
 }
 
-#result:focus:after {
-    content: "E";
-    position: absolute;
-    top: 0;
-    right: 0.2em;
-    bottom: 0;
-    line-height: 1.75em;
+.bind-previous + * {
+    clear: right;
+}
+
+#show-password {
     font-family: Symbols;
 }
 
-#result.show-password:after {
-    content: "e";
+#result:not(:placeholder-shown) ~ #show-password {
+    /* Makes the button show the correct icon - "E" is the open eye, "e" is the closed eye */
+    text-transform: uppercase;
 }
-*/
 
-#result.show-password:focus {
+#result.show ~ #show-password {
+    text-transform: lowercase;
+}
+
+#result.show {
     font-family: monospace;
 }
 

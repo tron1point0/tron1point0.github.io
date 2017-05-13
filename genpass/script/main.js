@@ -20,7 +20,7 @@ require([
         $result = $("#result"),
         $length = $("#length"),
         $chars = $(".allowedCharacters"),
-        $showPassword = $("#showPassword"),
+        $showPassword = $("#show-password"),
         flasher = new Flash({ container: $("#flash-messages") }),
         generator = new Genpass({
             length: $("#length").val(),
@@ -158,7 +158,7 @@ require([
 
                 // TODO: Add button and enable (see main.css as well)
                 case Keycodes.V:
-                    $result.toggleClass("show-password");
+                    $showPassword.click();
                     break;
 
                 // TODO: Generate from `accesskey` attribute
@@ -179,6 +179,10 @@ require([
                     break;
             }
         });
+
+    $showPassword.on("click.show", function(event) {
+        $result.toggleClass("show");
+    });
 
     /**
      * Called when the key needs to be regenerated.
