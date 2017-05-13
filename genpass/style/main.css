@@ -99,6 +99,7 @@ button:focus {
 button:active {
     top: 0.1em;
     left: 0.1em;
+    color: inherit;
 }
 
 button, button:active {
