@@ -430,3 +430,14 @@ input + .bind-previous {
 #flash-messages > *.error {
     background-color: var(--error-message);
 }
+
+/******************************
+ * 3-color hash of the secret *
+ ******************************/
+
+#secret {
+    background-position: 100% 0;
+    background-size: 0.5em 100%;
+    background-repeat: no-repeat;
+}
+

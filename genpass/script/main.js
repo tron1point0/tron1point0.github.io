@@ -10,12 +10,13 @@ require.config({
 
 require([
     "script/genpass",
+    "script/color-hash",
     "utils/Range",
     "utils/Keycodes",
     "utils/FlashNotification",
     "jquery",
     "utils/Array",
-], function(Genpass, Range, Keycodes, Flash, $) {
+], function(Genpass, ColorHash, Range, Keycodes, Flash, $) {
     var $salt = $("#salt"),
         $secret = $("#secret"),
         $result = $("#result"),
@@ -23,6 +24,7 @@ require([
         $chars = $(".allowedCharacters"),
         $showPassword = $("#show-password"),
         flasher = new Flash({ container: $("#flash-messages") }),
+        colorHasher = new ColorHash(),
         generator = new Genpass({
             length: $("#length").val(),
             allowedCharacters: (function() {
@@ -117,6 +119,9 @@ require([
      * Makes <Return>, <Enter>, and <KP_Return> generate the password as well as <Tab>
      */
     $secret.on("keypress.generate", function (event) {
+            $(this).css({
+                "background-image": colorHasher.linearGradient(colorHasher.colors($(this).val())),
+            });
             switch (event.which) {
                 case Keycodes.ENTER:
                     $result.focus();
