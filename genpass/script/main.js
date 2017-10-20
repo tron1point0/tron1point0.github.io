@@ -119,9 +119,6 @@ require([
      * Makes <Return>, <Enter>, and <KP_Return> generate the password as well as <Tab>
      */
     $secret.on("keypress.generate", function (event) {
-            $(this).css({
-                "background-image": colorHasher.linearGradient(colorHasher.colors($(this).val())),
-            });
             switch (event.which) {
                 case Keycodes.ENTER:
                     $result.focus();
@@ -201,6 +198,10 @@ require([
         if (!$salt.val() || !$secret.val()) {
             return;
         }
+
+        $secret.css({
+            "background-image": colorHasher.generate($secret.val()),
+        });
 
         $result.val(generator.generate($salt.val(), $secret.val()));
 
