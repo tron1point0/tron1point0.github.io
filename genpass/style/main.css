@@ -10,6 +10,7 @@
     --header: #0133C9; /* royalblue + 2 */
     --header-text: white;
 
+    --disabled-highlight: hsl(0,0%,80%);
     --disabled: hsl(0,0%,70%);
     --disabled-border: hsl(0,0%,60%);
 
@@ -82,6 +83,43 @@ body, #menu {
 #header > h1 {
     text-align: center;
     font-weight: bold;
+}
+
+#footer {
+    /* Hangs below the body. */
+    position: relative;
+    height: 0;
+    top: 6em; /* body.padding-bottom * 1/footer.font-size */
+    font-size: 50%;
+    line-height: 300%;
+    background-color: none;
+    text-align: center;
+    color: var(--disabled);
+    text-shadow: 0 1px 0 white;
+}
+
+#footer a, #footer a:visited {
+    color: var(--disabled);
+    font-size: inherit;
+    margin: 0 1em;
+    padding: 0;
+    white-space: nowrap;
+    text-decoration: none;
+    border-bottom: 1px solid var(--disabled);
+}
+
+#footer a:hover, #footer a:active {
+    color: var(--disabled-highlight);
+    border-bottom: 1px solid var(--disabled-highlight);
+}
+
+.icon {
+    font-family: Symbols;
+    font-size: inherit;
+}
+
+#footer a > .icon {
+    margin: 0 0.5em 0 0;
 }
 
 button {
