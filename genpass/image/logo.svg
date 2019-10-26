@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 192 192"
+    style="fill: transparent"
+    id="image">
+  <style type="text/css">
+    .body {
+        fill: #0133C9;
+        stroke: white;
+        stroke-width: 1px;
+    }
+
+    .dot {
+        fill: black;
+    }
+
+    .field {
+        fill:white;
+        stroke:black;
+    }
+  </style>
+  <defs>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="1" stdDeviation="2" />
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.2"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <g id="logo" transform="translate(12 12)">
+    <rect x="0" y="0" rx="12" ry="12" width="168" height="168" class="body" />
+    <g id="dots" transform="translate(24 56)" filter="url(#shadow)">
+        <rect x="0" y="0" width="120" height="56" rx="4%" ry="4%" class="field" />
+        <circle cx="30" cy="28" r="10" class="dot" />
+        <circle cx="60" cy="28" r="10" class="dot" />
+        <circle cx="90" cy="28" r="10" class="dot" />
+    </g>
+  </g>
+</svg>
+
