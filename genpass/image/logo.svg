@@ -7,7 +7,7 @@
   <style type="text/css">
     .body {
         fill: #0133C9;
-        stroke: white;
+        stroke: black;
         stroke-width: 1px;
     }
 
