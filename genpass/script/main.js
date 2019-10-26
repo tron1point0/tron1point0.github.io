@@ -205,12 +205,9 @@ require([
 
         $result.val(generator.generate($salt.val(), $secret.val()));
 
-        // Need the setTimeout because some browsers reset the selection *after* the handler fires.
-        setTimeout(function () {
-            $result.select();
-            if (document.execCommand && document.execCommand("copy")) {
-                flasher.info("Copied to clipboard");
-            }
-        }, 1);
+        $result.select();
+        if (document.execCommand && document.execCommand("copy")) {
+            flasher.info("Copied to clipboard");
+        }
     }
 });
