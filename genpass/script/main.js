@@ -23,6 +23,7 @@ require([
         $length = $("#length"),
         $chars = $(".allowedCharacters"),
         $showPassword = $("#show-password"),
+        $clearPassword = $("#clear-password"),
         flasher = new Flash({ container: $("#flash-messages") }),
         colorHasher = new ColorHash(),
         generator = new Genpass({
@@ -190,6 +191,28 @@ require([
     });
 
     /**
+     * Only show the clearPassword button if we can directly manipulate the
+     * clipboard.
+     */
+    if (navigator.clipboard.writeText) {
+        $clearPassword.css("display", "unset");
+    }
+
+    /**
+     * Clears the generated password and clipboard
+     */
+    $clearPassword.on("click.clear", function(event) {
+        navigator.clipboard.writeText("").then(() => {
+            if (window.getSelection) {
+                window.getSelection().empty();
+            }
+            flasher.info("Cleared clipboard");
+        }).catch(() => {
+            console.debug("Couldn't clear clipboard.", err);
+        });
+    });
+
+    /**
      * Called when the key needs to be regenerated.
      *
      * Populates `#result` and selects the value.
@@ -203,11 +226,18 @@ require([
             "background-image": colorHasher.generate($secret.val()),
         });
 
-        $result.val(generator.generate($salt.val(), $secret.val()));
+        let generated = generator.generate($salt.val(), $secret.val());
+
+        $result.val(generated);
+
+        if (navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(generated).then(() => {
+                flasher.info("Copied to clipboard");
+            }).catch(err => {
+                console.debug("Couldn't copy generated value to clipboard.", err);
+            });
+        }
 
         $result.select();
-        if (document.execCommand && document.execCommand("copy")) {
-            flasher.info("Copied to clipboard");
-        }
     }
 });

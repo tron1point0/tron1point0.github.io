@@ -397,6 +397,21 @@ input + .bind-previous {
     clear: right;
 }
 
+.bind-previous > * {
+    border: 0;
+    padding: 0;
+    margin: 0 0 0 0.5em;
+}
+
+.bind-previous > *:first-child {
+    margin-left: 0;
+}
+
+#clear-password {
+    /* Hide by default. Made visible by script if the right API is available. */
+    display: none;
+}
+
 #show-password {
     font-family: Symbols;
 }
