@@ -23,7 +23,7 @@ require([
         $length = $("#length"),
         $chars = $(".allowedCharacters"),
         $showPassword = $("#show-password"),
-        $clearPassword = $("#clear-password"),
+        $clearPassword = $("#clear-clipboard"),
         flasher = new Flash({ container: $("#flash-messages") }),
         colorHasher = new ColorHash(),
         generator = new Genpass({
@@ -125,6 +125,8 @@ require([
                     $result.focus();
                     break;
             }
+        }).on("blur.generate", function(event) {
+            $(this).css("background-image", colorHasher.generate($(this).val()));
         });
 
     $result
@@ -154,11 +156,10 @@ require([
                 case Keycodes.BACKSPACE:
                 case Keycodes.DELETE:
                 case Keycodes.ESCAPE:
-                    $salt.val("");
-                    $secret.val("");
-                    $result.val("");
                     $clearPassword.click();
-                    $salt.focus();
+                    $result.val("");
+                    $secret.val("").blur();
+                    $salt.val("").focus();
                     break;
 
                 case Keycodes.X:
@@ -226,10 +227,6 @@ require([
         if (!$salt.val() || !$secret.val()) {
             return;
         }
-
-        $secret.css({
-            "background-image": colorHasher.generate($secret.val()),
-        });
 
         let generated = generator.generate($salt.val(), $secret.val());
 

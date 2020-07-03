@@ -25,16 +25,16 @@
     --info-message: #DFF7CB;
     --warning-message: #FFF1D2;
     --error-message: #F8CCD9;
+
+    /* Darkest of their color */
+    --info-border: #67EC00;
+    --warning-border: #FFAE00;
+    --error-border: #EF0044;
 }
 
 @font-face {
     font-family: Password;
     src: url(Password.woff);
-}
-
-@font-face {
-    font-family: Symbols;
-    src: url(Symbols.woff);
 }
 
 html {
@@ -113,13 +113,14 @@ body, #menu {
     border-bottom: 1px solid var(--disabled-highlight);
 }
 
-.icon {
-    font-family: Symbols;
+.bi {
     font-size: inherit;
 }
 
-#footer a > .icon {
-    margin: 0 0.5em 0 0;
+#footer a > .bi {
+    vertical-align: middle;
+    margin: 0;
+    padding: 0;
 }
 
 button {
@@ -150,7 +151,6 @@ button, button:active {
     height: 2.5em;
     box-sizing: border-box;
     text-shadow: 0 0 0.5em var(--shadow);
-    font-family: Symbols;
 }
 
 #menuButton:hover {
@@ -289,6 +289,13 @@ input[type=number] {
     font-family: Password;
 }
 
+input[type=text]:invalid,
+input[type=password]:invalid,
+input[type=number]:invalid {
+    border-bottom-color: var(--error-border);
+    box-shadow: none;   /* Overrides mozilla default. */
+}
+
 input[type=text]:focus,
 input[type=password]:focus,
 input[type=number]:focus {
@@ -385,26 +392,25 @@ input[type=checkbox]:checked:after {
  * Show Password Button *
  ************************/
 
-input + .bind-previous {
-    float: right;
-    border: 0;
-    padding: 0.2em;
-    margin: -2em 0 0 0;
-    background: transparent;
+.input-group {
+    display: flex;
+    flex-flow: row nowrap;
 }
 
-.bind-previous + * {
-    clear: right;
+.input-group > input {
+    /* Allow the input element to shrink until the @media tag takes over. */
+    min-width: 0;
 }
 
-.bind-previous > * {
-    border: 0;
-    padding: 0;
-    margin: 0 0 0 0.5em;
-}
+@media screen and (max-width: 320px) {
+    .input-group {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
 
-.bind-previous > *:first-child {
-    margin-left: 0;
+    .input-group > input:first-child {
+        min-width: unset;
+    }
 }
 
 #clear-password {
@@ -412,17 +418,14 @@ input + .bind-previous {
     display: none;
 }
 
-#show-password {
-    font-family: Symbols;
+/* Toggle the button icon depending on the state of the result. */
+#result:not(.show) ~ * ~ #show-password > .hide,
+#result.show ~ * ~ #show-password > .show {
+    display: none;
 }
-
-#result:not(:placeholder-shown) ~ #show-password {
-    /* Makes the button show the correct icon - "E" is the open eye, "e" is the closed eye */
-    text-transform: uppercase;
-}
-
-#result.show ~ #show-password {
-    text-transform: lowercase;
+#result:not(.show) ~ * ~ #show-password > .show,
+#result.show ~ * ~ #show-password > .hide {
+    display: unset;
 }
 
 #result.show {
@@ -474,14 +477,17 @@ input + .bind-previous {
 
 #flash-messages > *.info {
     background-color: var(--info-message);
+    border-color: var(--info-border);
 }
 
 #flash-messages > *.warning {
     background-color: var(--warning-message);
+    border-color: var(--warning-border);
 }
 
 #flash-messages > *.error {
     background-color: var(--error-message);
+    border-color: var(--error-border);
 }
 
 /******************************
