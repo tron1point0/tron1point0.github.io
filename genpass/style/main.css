@@ -115,12 +115,7 @@ body, #menu {
 
 .bi {
     font-size: inherit;
-}
-
-#footer a > .bi {
     vertical-align: middle;
-    margin: 0;
-    padding: 0;
 }
 
 button {
@@ -158,8 +153,6 @@ button, button:active {
 }
 
 #menuButton:active {
-    top: 0.1em;
-    left: 0.1em;
     text-shadow: -0.1em -0.1em 0.5em var(--shadow);
 }
 
