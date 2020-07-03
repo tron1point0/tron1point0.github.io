@@ -157,6 +157,7 @@ require([
                     $salt.val("");
                     $secret.val("");
                     $result.val("");
+                    $clearPassword.trigger("click.clear");
                     $salt.focus();
                     break;
 
