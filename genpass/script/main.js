@@ -157,8 +157,12 @@ require([
                     $salt.val("");
                     $secret.val("");
                     $result.val("");
-                    $clearPassword.trigger("click.clear");
+                    $clearPassword.click();
                     $salt.focus();
+                    break;
+
+                case Keycodes.X:
+                    $clearPassword.click();
                     break;
 
                 case Keycodes.V:
