@@ -406,11 +406,6 @@ input[type=checkbox]:checked:after {
     }
 }
 
-#clear-password {
-    /* Hide by default. Made visible by script if the right API is available. */
-    display: none;
-}
-
 /* Toggle the button icon depending on the state of the result. */
 #result:not(.show) ~ * ~ #show-password > .hide,
 #result.show ~ * ~ #show-password > .show {

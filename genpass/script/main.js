@@ -197,24 +197,16 @@ require([
     });
 
     /**
-     * Only show the clearPassword button if we can directly manipulate the
-     * clipboard.
-     */
-    if (navigator.clipboard.writeText) {
-        $clearPassword.css("display", "unset");
-    }
-
-    /**
      * Clears the generated password and clipboard
      */
-    $clearPassword.on("click.clear", function(event) {
-        navigator.clipboard.writeText("").then(() => {
+    $clearPassword.on("click.clear", event => {
+        copyToClipboard("").then(() => {
+            flasher.info("Cleared clipboard");
             if (window.getSelection) {
                 window.getSelection().empty();
             }
-            flasher.info("Cleared clipboard");
-        }).catch(() => {
-            console.debug("Couldn't clear clipboard.", err);
+        }).catch(err => {
+            console.debug("Couldn't clear clipboard", err);
         });
     });
 
@@ -231,15 +223,32 @@ require([
         let generated = generator.generate($salt.val(), $secret.val());
 
         $result.val(generated);
+        $result.select();
+        copyToClipboard(generated).then(() => {
+            flasher.info("Copied to clipboard");
+        }).catch(err => {
+            console.debug("Couldn't write value to clipboard.", err);
+        });
+    }
 
-        if (navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(generated).then(() => {
-                flasher.info("Copied to clipboard");
-            }).catch(err => {
-                console.debug("Couldn't copy generated value to clipboard.", err);
-            });
+    function copyToClipboard(str) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            return navigator.clipboard.writeText(str);
         }
 
-        $result.select();
+        return new Promise((resolve, reject) => {
+            let handler = $(document).one('copy', e => {
+                // Have to put _something_ in the clipboard for old browsers
+                // or the whole execCommand fails.
+                e.originalEvent.clipboardData.setData('text/plain', str || " ");
+                e.preventDefault();
+            });
+
+            if (document.execCommand('copy')) {
+                resolve();
+            } else {
+                reject("exectCommand returned false");
+            }
+        });
     }
 });
