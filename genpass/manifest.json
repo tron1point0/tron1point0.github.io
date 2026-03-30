@@ -1,0 +1,20 @@
+{
+  "name": "Genpass",
+  "short_name": "Genpass",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0133C9",
+  "theme_color": "#0133C9",
+  "icons": [
+    {
+      "src": "image/logo_192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "image/logo_180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

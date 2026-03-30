@@ -17,7 +17,18 @@
     <link rel="apple-touch-icon" type="image/png" href="image/logo_152.png" sizes="152x152"/>
     <link rel="apple-touch-icon" type="image/png" href="image/logo_180.png" sizes="180x180"/>
     <link rel="stylesheet" type="text/css" href="style/main.css" />
+    <link rel="manifest" href="./manifest.json">
+    <meta name="theme-color" content="#0133C9">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Genpass">
     <script type="text/javascript" data-main="script/main" src="../lib/dist/require-js/require.js"></script>
+    <script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js');
+}
+</script>
 </head>
 <body>
 <header id="header">
