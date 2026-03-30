@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Runway Crosswind Calculator</title>
+  <style>
+    :root {
+      --bg-primary: #1a1a2e;
+      --bg-secondary: #16213e;
+      --text-primary: #e8e8e8;
+      --text-secondary: #a0a0a0;
+      --runway-color: #e0e0e0;
+      --runway-dark: #404040;
+      --runway-white: #ffffff;
+      --runway-yellow: #ffcc00;
+      --wind-color: rgba(100, 180, 255, 0.75);
+      --wind-color-solid: #64b4ff;
+      --accent-green: #4ade80;
+      --accent-amber: #fbbf24;
+      --accent-red: #ef4444;
+      --compass-ring: #2a2a4a;
+      --compass-ticks: #5a5a7a;
+      --compass-labels: #aaaacc;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+    }
+
+    .container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .compass-section {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2vmin;
+      min-height: 0;
+    }
+
+    .compass-container {
+      width: 85vmin;
+      height: 85vmin;
+      max-width: 100%;
+      max-height: 100%;
+      position: relative;
+    }
+
+    .compass-svg {
+      width: 100%;
+      height: 100%;
+      touch-action: none;
+    }
+
+    .controls-section {
+      background: var(--bg-secondary);
+      padding: 1.5vmin 3vmin;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5vmin;
+    }
+
+    .wind-speed-control {
+      display: flex;
+      align-items: center;
+      gap: 3vmin;
+    }
+
+    .wind-speed-label {
+      font-size: 3vmin;
+      color: var(--text-secondary);
+      min-width: 12vmin;
+    }
+
+    .wind-speed-slider {
+      flex: 1;
+      height: 8vmin;
+      -webkit-appearance: none;
+      appearance: none;
+      background: var(--compass-ring);
+      border-radius: 4vmin;
+      outline: none;
+    }
+
+    .wind-speed-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 10vmin;
+      height: 10vmin;
+      background: var(--wind-color-solid);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(100, 180, 255, 0.5);
+    }
+
+    .wind-speed-slider::-moz-range-thumb {
+      width: 10vmin;
+      height: 10vmin;
+      background: var(--wind-color-solid);
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 0 10px rgba(100, 180, 255, 0.5);
+    }
+
+    .wind-speed-value {
+      font-size: 4vmin;
+      font-weight: bold;
+      min-width: 14vmin;
+      text-align: right;
+      color: var(--wind-color-solid);
+    }
+
+    .results {
+      display: flex;
+      justify-content: space-around;
+      gap: 3vmin;
+    }
+
+    .result-item {
+      flex: 1;
+      text-align: center;
+      padding: 1vmin;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 2vmin;
+    }
+
+    .result-label {
+      font-size: 2.8vmin;
+      color: var(--text-secondary);
+      margin-bottom: 0.5vmin;
+      letter-spacing: 0.1em;
+    }
+
+    .result-value {
+      font-size: 7vmin;
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    .result-value.headwind {
+      color: var(--accent-green);
+    }
+
+    .result-value.crosswind {
+      color: var(--accent-amber);
+    }
+
+    .result-unit {
+      font-size: 3vmin;
+      color: var(--text-secondary);
+    }
+
+    .wind-direction-display {
+      text-align: center;
+      font-size: 2.5vmin;
+      color: var(--text-secondary);
+      margin-top: 0.5vmin;
+    }
+
+    .wind-direction-display span {
+      color: var(--wind-color-solid);
+    }
+
+    @media (orientation: landscape) {
+      .container {
+        flex-direction: row;
+      }
+
+      .compass-section {
+        flex: 0 0 55%;
+        padding: 3vmin;
+      }
+
+      .compass-container {
+        width: 80vmin;
+        height: 80vmin;
+      }
+
+      .controls-section {
+        flex: 1;
+        justify-content: center;
+        padding: 3vmin;
+      }
+
+      .results {
+        flex-direction: column;
+        gap: 2vmin;
+      }
+
+      .result-item {
+        padding: 2vmin;
+      }
+
+      .result-value {
+        font-size: 9vmin;
+      }
+
+      .result-label {
+        font-size: 3.5vmin;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="compass-section">
+      <div class="compass-container">
+        <svg class="compass-svg" viewBox="0 0 100 100" id="compassSvg">
+          <circle cx="50" cy="50" r="46" fill="none" stroke="var(--compass-ring)" stroke-width="4"/>
+          
+          <g id="compassTicks"></g>
+          <g id="compassLabels"></g>
+          
+          <g id="runwayGroup" class="runway">
+            <g id="runwayLayer"></g>
+          </g>
+          
+          <g id="windGroup" class="wind-arrow">
+            <g id="windArrowLayer"></g>
+          </g>
+          
+        </svg>
+      </div>
+    </div>
+    
+    <div class="controls-section">
+      <div class="wind-speed-control">
+        <span class="wind-speed-label">Wind</span>
+        <input type="range" class="wind-speed-slider" id="windSpeedSlider" min="0" max="30" value="15">
+        <span class="wind-speed-value" id="windSpeedValue">15 kt</span>
+      </div>
+      
+      <div class="results">
+        <div class="result-item">
+          <div class="result-label" id="headwindLabel">HEADWIND</div>
+          <div class="result-value headwind" id="headwindValue">0</div>
+          <div class="result-unit">kt</div>
+        </div>
+        <div class="result-item">
+          <div class="result-label" id="crosswindLabel">CROSSWIND</div>
+          <div class="result-value crosswind" id="crosswindValue">0</div>
+          <div class="result-unit">kt</div>
+        </div>
+      </div>
+      
+      <div class="wind-direction-display">
+        Wind: <span id="windDirectionDisplay">030°</span> | Runway: <span id="runwayDirectionDisplay">150°</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const compassSvg = document.getElementById('compassSvg');
+    const runwayGroup = document.getElementById('runwayGroup');
+    const runwayLayer = document.getElementById('runwayLayer');
+    const windGroup = document.getElementById('windGroup');
+    const windArrowLayer = document.getElementById('windArrowLayer');
+    const windSpeedSlider = document.getElementById('windSpeedSlider');
+    const windSpeedValue = document.getElementById('windSpeedValue');
+    const headwindValue = document.getElementById('headwindValue');
+    const headwindLabel = document.getElementById('headwindLabel');
+    const crosswindValue = document.getElementById('crosswindValue');
+    const windDirectionDisplay = document.getElementById('windDirectionDisplay');
+    const runwayDirectionDisplay = document.getElementById('runwayDirectionDisplay');
+    const compassTicks = document.getElementById('compassTicks');
+    const compassLabels = document.getElementById('compassLabels');
+
+    let runwayHeading = 150;
+    let windHeading = 30;
+    let windSpeed = 15;
+    let isDragging = false;
+    let dragTarget = null;
+    let pointerDownPos = { x: 0, y: 0 };
+    let centerX = 50;
+    let centerY = 50;
+
+    const runwayWidth = 8;
+    const runwayLength = 60;
+    const runwayStartY = centerY - runwayLength / 2;
+    const runwayEndY = centerY + runwayLength / 2;
+    const runwayLeftX = centerX - runwayWidth / 2;
+    const runwayRightX = centerX + runwayWidth / 2;
+
+    function initCompass() {
+      for (let deg = 0; deg < 360; deg += 10) {
+        const rad = (deg - 90) * Math.PI / 180;
+        const innerR = deg % 90 === 0 ? 38 : 40;
+        const outerR = 44;
+        
+        const x1 = centerX + innerR * Math.cos(rad);
+        const y1 = centerY + innerR * Math.sin(rad);
+        const x2 = centerX + outerR * Math.cos(rad);
+        const y2 = centerY + outerR * Math.sin(rad);
+        
+        const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        tick.setAttribute('x1', x1.toFixed(2));
+        tick.setAttribute('y1', y1.toFixed(2));
+        tick.setAttribute('x2', x2.toFixed(2));
+        tick.setAttribute('y2', y2.toFixed(2));
+        tick.setAttribute('stroke', 'var(--compass-ticks)');
+        tick.setAttribute('stroke-width', deg % 90 === 0 ? '0.5' : '0.3');
+        compassTicks.appendChild(tick);
+        
+        if (deg % 30 === 0) {
+          const labelR = 34;
+          const lx = centerX + labelR * Math.cos(rad);
+          const ly = centerY + labelR * Math.sin(rad);
+          
+          if (deg % 90 === 0) {
+            const labels = ['N', 'E', 'S', 'W'];
+            const labelIdx = deg / 90;
+            
+            const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            label.setAttribute('x', lx.toFixed(2));
+            label.setAttribute('y', ly.toFixed(2));
+            label.setAttribute('font-size', '7');
+            label.setAttribute('font-weight', 'bold');
+            label.setAttribute('fill', deg === 0 ? '#ef4444' : 'var(--compass-labels)');
+            label.setAttribute('text-anchor', 'middle');
+            label.setAttribute('dominant-baseline', 'middle');
+            label.textContent = labels[labelIdx];
+            compassLabels.appendChild(label);
+          } else {
+            const numLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            numLabel.setAttribute('x', lx.toFixed(2));
+            numLabel.setAttribute('y', ly.toFixed(2));
+            numLabel.setAttribute('font-size', '3.5');
+            numLabel.setAttribute('fill', 'var(--compass-ticks)');
+            numLabel.setAttribute('text-anchor', 'middle');
+            numLabel.setAttribute('dominant-baseline', 'middle');
+            numLabel.textContent = deg.toString();
+            compassLabels.appendChild(numLabel);
+          }
+        }
+      }
+    }
+
+    function getRunwayNumber(heading) {
+      const num = Math.round(heading / 10) % 36;
+      return num === 0 ? '36' : num.toString().padStart(2, '0');
+    }
+
+    function buildRunway() {
+      runwayLayer.innerHTML = '';
+      
+      const runwayRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      runwayRect.setAttribute('x', runwayLeftX);
+      runwayRect.setAttribute('y', runwayStartY);
+      runwayRect.setAttribute('width', runwayWidth);
+      runwayRect.setAttribute('height', runwayLength);
+      runwayRect.setAttribute('fill', 'var(--runway-dark)');
+      runwayRect.setAttribute('stroke', 'var(--runway-white)');
+      runwayRect.setAttribute('stroke-width', '0.5');
+      runwayLayer.appendChild(runwayRect);
+      
+      const num1 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      num1.setAttribute('id', 'runwayNum1');
+      num1.setAttribute('x', centerX);
+      num1.setAttribute('y', runwayStartY + 8);
+      num1.setAttribute('font-size', '5');
+      num1.setAttribute('font-weight', 'bold');
+      num1.setAttribute('fill', 'var(--runway-white)');
+      num1.setAttribute('text-anchor', 'middle');
+      num1.setAttribute('dominant-baseline', 'middle');
+      num1.setAttribute('transform', `rotate(180 50 ${runwayStartY + 8})`);
+      runwayLayer.appendChild(num1);
+      
+      const num2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      num2.setAttribute('id', 'runwayNum2');
+      num2.setAttribute('x', centerX);
+      num2.setAttribute('y', runwayEndY - 8);
+      num2.setAttribute('font-size', '5');
+      num2.setAttribute('font-weight', 'bold');
+      num2.setAttribute('fill', 'var(--runway-white)');
+      num2.setAttribute('text-anchor', 'middle');
+      num2.setAttribute('dominant-baseline', 'middle');
+      runwayLayer.appendChild(num2);
+      
+      const numStripes = 5;
+      const stripeWidth = 0.5;
+      const stripeGap = 0.9;
+      const stripeHeight = 4;
+      const stripeBottom = runwayEndY - 1;
+      const stripeTop = stripeBottom - stripeHeight;
+      
+      for (let i = 0; i < numStripes; i++) {
+        const stripe = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        stripe.setAttribute('x', runwayLeftX + stripeGap + i * (stripeWidth + stripeGap));
+        stripe.setAttribute('y', stripeTop);
+        stripe.setAttribute('width', stripeWidth);
+        stripe.setAttribute('height', stripeHeight);
+        stripe.setAttribute('fill', 'var(--runway-white)');
+        runwayLayer.appendChild(stripe);
+      }
+    }
+
+    function buildWindArrow() {
+      windArrowLayer.innerHTML = '';
+      
+      const arrowPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      arrowPath.setAttribute('id', 'windArrow');
+      arrowPath.setAttribute('fill', 'none');
+      arrowPath.setAttribute('stroke', 'var(--wind-color)');
+      arrowPath.setAttribute('stroke-width', '2.5');
+      arrowPath.setAttribute('stroke-linecap', 'round');
+      arrowPath.setAttribute('stroke-linejoin', 'round');
+      windArrowLayer.appendChild(arrowPath);
+    }
+
+    function updateWindArrow() {
+      const rad = (windHeading + 180 - 90) * Math.PI / 180;
+      
+      const length = 44;
+      const headLength = 10;
+      const headWidth = 5;
+      
+      const arrowPath = document.getElementById('windArrow');
+      if (arrowPath) {
+        const cos = Math.cos(rad);
+        const sin = Math.sin(rad);
+        
+        const startX = centerX - length * cos;
+        const startY = centerY - length * sin;
+        const tipX = centerX + length * cos;
+        const tipY = centerY + length * sin;
+        const headBaseX = tipX - headLength * cos;
+        const headBaseY = tipY - headLength * sin;
+        const headLeftX = headBaseX + headWidth * Math.cos(rad + Math.PI / 2);
+        const headLeftY = headBaseY + headWidth * Math.sin(rad + Math.PI / 2);
+        const headRightX = headBaseX + headWidth * Math.cos(rad - Math.PI / 2);
+        const headRightY = headBaseY + headWidth * Math.sin(rad - Math.PI / 2);
+        
+        const d = `M ${startX.toFixed(2)} ${startY.toFixed(2)} L ${headBaseX.toFixed(2)} ${headBaseY.toFixed(2)} M ${tipX.toFixed(2)} ${tipY.toFixed(2)} L ${headLeftX.toFixed(2)} ${headLeftY.toFixed(2)} M ${tipX.toFixed(2)} ${tipY.toFixed(2)} L ${headRightX.toFixed(2)} ${headRightY.toFixed(2)}`;
+        arrowPath.setAttribute('d', d);
+      }
+    }
+
+    function updateRunwayRotation() {
+      runwayGroup.setAttribute('transform', `rotate(${runwayHeading} 50 50)`);
+      
+      const num1 = document.getElementById('runwayNum1');
+      const num2 = document.getElementById('runwayNum2');
+      if (num1) num1.textContent = getRunwayNumber((runwayHeading + 180) % 360);
+      if (num2) num2.textContent = getRunwayNumber(runwayHeading);
+    }
+
+
+
+    function calculateComponents() {
+      const delta = (windHeading - runwayHeading + 360) % 360;
+      const deltaRad = delta * Math.PI / 180;
+      
+      const signedHeadwind = Math.round(windSpeed * Math.cos(deltaRad));
+      const headwind = Math.abs(signedHeadwind);
+      const signedCrosswind = Math.round(windSpeed * Math.sin(deltaRad));
+      const crosswind = Math.abs(signedCrosswind);
+      
+      headwindLabel.textContent = signedHeadwind >= 0 ? 'HEADWIND' : 'TAILWIND';
+      headwindValue.textContent = headwind;
+      crosswindValue.textContent = crosswind;
+      document.getElementById('crosswindLabel').textContent = signedCrosswind > 0 ? 'RIGHT XWIND' : signedCrosswind < 0 ? 'LEFT XWIND' : 'CROSSWIND';
+      
+      const crosswindNorm = crosswind / 15;
+      if (crosswindNorm < 0.5) {
+        crosswindValue.style.color = 'var(--accent-green)';
+      } else if (crosswindNorm < 1) {
+        crosswindValue.style.color = 'var(--accent-amber)';
+      } else {
+        crosswindValue.style.color = 'var(--accent-red)';
+      }
+      
+      windDirectionDisplay.textContent = String(windHeading).padStart(3, '0') + '°';
+      runwayDirectionDisplay.textContent = String(runwayHeading).padStart(3, '0') + '°';
+    }
+
+    function updateWindSpeed() {
+      windSpeed = parseInt(windSpeedSlider.value);
+      windSpeedValue.textContent = windSpeed + ' kt';
+      calculateComponents();
+    }
+
+    function getAngleFromEvent(e) {
+      const rect = compassSvg.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      
+      const x = ((clientX - rect.left) / rect.width) * 100;
+      const y = ((clientY - rect.top) / rect.height) * 100;
+      
+      const dx = x - centerX;
+      const dy = y - centerY;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      let angle = Math.atan2(dy, dx) * 180 / Math.PI + 90;
+      if (angle < 0) angle += 360;
+      
+      return { angle, distance };
+    }
+
+    function snapAngle(angle, target) {
+      if (target === 'runway') {
+        return Math.round(angle / 10) * 10 % 360;
+      }
+      return Math.round(angle) % 360;
+    }
+
+    function handlePointerDown(e) {
+      e.preventDefault();
+      const rect = compassSvg.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      pointerDownPos = { x: clientX, y: clientY };
+      isDragging = true;
+      
+      const { distance } = getAngleFromEvent(e);
+      
+      if (distance > 30) {
+        dragTarget = 'wind';
+      } else {
+        dragTarget = 'runway';
+      }
+    }
+
+    function handlePointerMove(e) {
+      if (!isDragging) return;
+      e.preventDefault();
+      
+      const { angle } = getAngleFromEvent(e);
+      
+      if (dragTarget === 'runway') {
+        runwayHeading = snapAngle(angle, 'runway');
+        updateRunwayRotation();
+      } else {
+        windHeading = snapAngle(angle, 'wind');
+        updateWindArrow();
+      }
+      
+      calculateComponents();
+    }
+
+    function handlePointerUp(e) {
+      if (!isDragging) return;
+      
+      const rect = compassSvg.getBoundingClientRect();
+      const clientX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+      const clientY = e.changedTouches ? e.changedTouches[0].clientY : e.clientY;
+      
+      const dx = clientX - pointerDownPos.x;
+      const dy = clientY - pointerDownPos.y;
+      const moved = Math.sqrt(dx * dx + dy * dy);
+      
+      if (!moved && dragTarget === 'runway') {
+        runwayHeading = (runwayHeading + 180) % 360;
+        updateRunwayRotation();
+        calculateComponents();
+      }
+      
+      isDragging = false;
+      dragTarget = null;
+    }
+
+    compassSvg.addEventListener('mousedown', handlePointerDown);
+    compassSvg.addEventListener('touchstart', handlePointerDown, { passive: false });
+    document.addEventListener('mousemove', handlePointerMove);
+    document.addEventListener('touchmove', handlePointerMove, { passive: false });
+    document.addEventListener('mouseup', handlePointerUp);
+    document.addEventListener('touchend', handlePointerUp);
+    windSpeedSlider.addEventListener('input', updateWindSpeed);
+
+    initCompass();
+    buildRunway();
+    buildWindArrow();
+    updateRunwayRotation();
+    updateWindArrow();
+    calculateComponents();
+  </script>
+</body>
+</html>
