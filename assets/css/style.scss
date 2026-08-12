@@ -1,0 +1,26 @@
+@import "{{ site.theme }}";
+
+// Add dark mode color scheme
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #0d1117;
+    color: #c9d1d9;
+  }
+
+  a {
+    color: #58a6ff;
+  }
+
+  header {
+    color: #c9d1d9;
+  }
+
+  strong {
+    color: #f0f6fc;
+  }
+}
+
+// Trim the embarrasingly non-transparent background of the avatar
+header img {
+  border-radius: 50%;
+}
