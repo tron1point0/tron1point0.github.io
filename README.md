@@ -1,7 +1,3 @@
----
-title: An engineer
----
-
 # These are neat
 
 * [Genpass](genpass/) PDKDF2-SHA256 key extension for site-specific passwords.
